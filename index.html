@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hillside Tea Estate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f1f2ea;
+  --surface: #ffffff;
+  --text: #1d261f;
+  --muted: #5d6a5f;
+  --deep: #1b2a20;
+  --leaf: #4d7a45;
+  --amber: #d98d36;
+  --nav-h: 76px;
+  --nav-h-small: 58px;
+  --head: "Bricolage Grotesque", "Segoe UI", Arial, sans-serif;
+  --body: "Figtree", "Segoe UI", Arial, sans-serif;
+  color-scheme: light;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131c16; --surface: #1c2a20; --text: #e8ece3; --muted: #a2b0a4;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131c16; --surface: #1c2a20; --text: #e8ece3; --muted: #a2b0a4;
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: inherit; }
+html { scroll-behavior: smooth; scroll-padding-top: calc(var(--nav-h-small) + 12px); }
+body { margin: 0; background: var(--bg); color: var(--text); font: 400 1.0625rem/1.6 var(--body); }
+img, svg { max-width: 100%; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; border-radius: 4px; }
+
+/* ---------- NAV ---------- */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: var(--nav-h);
+  padding-top: env(safe-area-inset-top, 0px);
+  display: flex; align-items: center; justify-content: space-between;
+  padding-inline: clamp(1rem, 5vw, 4rem);
+  color: #fff;
+  background: transparent;
+  transition: height .3s ease, background-color .3s ease, color .3s ease, box-shadow .3s ease;
+}
+.nav.scrolled {
+  height: calc(var(--nav-h-small) + env(safe-area-inset-top, 0px));
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 0 2px 18px rgba(0,0,0,.14);
+}
+.brand { font: 800 1.35rem/1 var(--head); text-decoration: none; letter-spacing: -.01em; }
+.menu { display: flex; gap: .25rem; list-style: none; margin: 0; padding: 0; }
+.menu a {
+  position: relative; display: block; padding: .6rem 1rem;
+  text-decoration: none; font-weight: 600; border-radius: 999px;
+  transition: background-color .25s ease, color .25s ease;
+}
+.menu a::after {
+  content: ""; position: absolute; left: 1rem; right: 1rem; bottom: .3rem; height: 2px;
+  background: var(--amber); transform: scaleX(0); transform-origin: left;
+  transition: transform .3s ease;
+}
+.menu a:hover, .menu a:focus-visible { background: var(--amber); color: var(--deep); }
+.menu a:hover::after { transform: scaleX(0); }
+.menu a.active::after { transform: scaleX(1); }
+.nav .cta { margin-left: .5rem; background: var(--amber); color: var(--deep); }
+.nav .cta::after { display: none; }
+.nav .cta:hover { background: var(--leaf); color: #fff; }
+
+.toggle {
+  display: none; width: 44px; height: 44px; border: 0; border-radius: 10px;
+  background: transparent; color: inherit; cursor: pointer; position: relative;
+}
+.toggle span, .toggle span::before, .toggle span::after {
+  content: ""; position: absolute; left: 11px; width: 22px; height: 2px;
+  background: currentColor; transition: transform .3s ease, background-color .2s ease;
+}
+.toggle span { top: 21px; }
+.toggle span::before { left: 0; top: -7px; }
+.toggle span::after { left: 0; top: 7px; }
+.toggle[aria-expanded="true"] span { background: transparent; }
+.toggle[aria-expanded="true"] span::before { transform: translateY(7px) rotate(45deg); }
+.toggle[aria-expanded="true"] span::after { transform: translateY(-7px) rotate(-45deg); }
+
+@media (max-width: 800px) {
+  .toggle { display: block; }
+  .menu {
+    position: absolute; top: 100%; left: 0; right: 0;
+    flex-direction: column; gap: 0; padding: .5rem clamp(1rem, 5vw, 4rem) 1rem;
+    background: var(--deep); color: #fff;
+    max-height: 0; overflow: hidden; visibility: hidden; padding-block: 0;
+    transition: max-height .35s ease, padding .35s ease, visibility .35s;
+  }
+  .menu.open { max-height: 80vh; visibility: visible; padding-block: .5rem 1rem; }
+  .menu a { border-radius: 10px; padding: .9rem 1rem; }
+  .menu a::after { display: none; }
+  .menu a.active { background: rgba(255,255,255,.1); }
+  .nav .cta { margin: .5rem 0 0; text-align: center; }
+}
+
+/* ---------- SECTIONS ---------- */
+.hero {
+  min-height: 100vh; min-height: 100svh;
+  display: grid; align-items: end;
+  padding: calc(var(--nav-h) + 3rem) clamp(1rem, 5vw, 4rem) clamp(3rem, 9vw, 6rem);
+  color: #fff;
+  background:
+    radial-gradient(120% 70% at 85% 0%, rgba(217,141,54,.35), transparent 60%),
+    repeating-linear-gradient(115deg, rgba(255,255,255,.04) 0 2px, transparent 2px 46px),
+    linear-gradient(170deg, #2b4a31, var(--deep) 70%);
+}
+.hero h1 {
+  font: 800 clamp(2.6rem, 9vw, 6.5rem)/.95 var(--head);
+  letter-spacing: -.03em; margin: 0 0 1.25rem; max-width: 12ch;
+}
+.hero p { max-width: 46ch; font-size: 1.2rem; margin: 0 0 2rem; color: #dfe6d8; }
+.btn {
+  display: inline-block; padding: .9rem 1.6rem; border-radius: 999px;
+  background: var(--amber); color: var(--deep); font-weight: 700; text-decoration: none;
+  transition: background-color .25s ease, color .25s ease, transform .2s ease;
+}
+.btn:hover { background: #fff; transform: translateY(-2px); }
+
+.section { padding: clamp(4rem, 10vw, 7rem) clamp(1rem, 5vw, 4rem); max-width: 1180px; margin-inline: auto; }
+.section h2 { font: 800 clamp(1.9rem, 5vw, 3rem)/1.05 var(--head); letter-spacing: -.02em; margin: 0 0 1rem; }
+.lead { color: var(--muted); max-width: 60ch; margin: 0 0 2.5rem; }
+.grid { display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.card { background: var(--surface); padding: 1.6rem; border-radius: 6px 28px 6px 28px; border-left: 5px solid var(--leaf); }
+.card:nth-child(2) { border-color: var(--amber); }
+.card:nth-child(3) { border-color: var(--deep); }
+.card h3 { font: 700 1.3rem/1.2 var(--head); margin: 0 0 .5rem; }
+.card p { margin: 0; color: var(--muted); }
+.card .price { display: block; margin-top: 1rem; font-weight: 600; color: var(--text); }
+
+.band { background: var(--deep); color: #fff; }
+.band .section { display: grid; gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); align-items: center; }
+.band .lead { color: #c3cfc3; margin: 0; }
+
+.contact form { display: grid; gap: 1rem; max-width: 520px; }
+label { font-weight: 600; display: grid; gap: .35rem; }
+input, textarea {
+  font: inherit; padding: .8rem 1rem; border-radius: 10px; width: 100%;
+  border: 2px solid color-mix(in srgb, var(--muted) 40%, transparent);
+  background: var(--surface); color: var(--text);
+}
+input:focus, textarea:focus { border-color: var(--leaf); outline: none; }
+button.btn { border: 0; cursor: pointer; font: 700 1rem var(--body); justify-self: start; }
+footer { padding: 2rem clamp(1rem, 5vw, 4rem); text-align: center; color: var(--muted); }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition-duration: .01ms !important; }
+}
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <a class="brand" href="#home">Hillside</a>
+  <button class="toggle" id="toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="menu"><span></span></button>
+  <ul class="menu" id="menu">
+    <li><a href="#home" class="active">Home</a></li>
+    <li><a href="#teas">Teas</a></li>
+    <li><a href="#estate">Estate</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#contact" class="cta">Order a sample</a></li>
+  </ul>
+</header>
+
+<main>
+  <section class="hero" id="home">
+    <div>
+      <h1>Tea picked at 1,800 metres.</h1>
+      <p>Single-estate first flush from the Eastern Himalayan foothills, packed within a week of plucking.</p>
+      <a class="btn" href="#teas">See this season’s teas</a>
+    </div>
+  </section>
+
+  <section class="section" id="teas">
+    <h2>This season’s teas</h2>
+    <p class="lead">Three lots, each limited to one harvest. Scroll the page and watch the menu change as you go.</p>
+    <div class="grid">
+      <article class="card"><h3>First Flush</h3><p>Pale gold cup, floral and light, with a muscatel finish.</p><span class="price">₹850 / 100 g</span></article>
+      <article class="card"><h3>Second Flush</h3><p>Amber and round, with ripe stone fruit and a gentle tannic grip.</p><span class="price">₹720 / 100 g</span></article>
+      <article class="card"><h3>Monsoon Black</h3><p>Dark and malty. Holds up well to milk and sugar.</p><span class="price">₹480 / 100 g</span></article>
+    </div>
+  </section>
+
+  <div class="band">
+    <section class="section" id="estate">
+      <div>
+        <h2>The estate</h2>
+        <p class="lead">Forty families pluck by hand across steep terraces. We pay by the day, not by the kilo, so leaves are chosen for quality.</p>
+      </div>
+      <div>
+        <p class="lead">Every packet carries the plucking date and the terrace it came from.</p>
+      </div>
+    </section>
+  </div>
+
+  <section class="section contact" id="contact">
+    <h2>Order a sample</h2>
+    <p class="lead">Tell us where to send it. We reply within two working days.</p>
+    <form onsubmit="event.preventDefault(); this.querySelector('button').textContent = 'Request sent';">
+      <label>Name <input type="text" name="name" required autocomplete="name"></label>
+      <label>Email <input type="email" name="email" required autocomplete="email"></label>
+      <label>Which tea? <textarea name="msg" rows="3"></textarea></label>
+      <button class="btn" type="submit">Send request</button>
+    </form>
+  </section>
+</main>
+
+<footer>© 2026 Hillside Tea Estate</footer>
+
+<script>
+(function () {
+  var nav = document.getElementById('nav');
+  var menu = document.getElementById('menu');
+  var toggle = document.getElementById('toggle');
+  var links = Array.prototype.slice.call(menu.querySelectorAll('a:not(.cta)'));
+
+  // Change nav style once the page is scrolled
+  function onScroll() { nav.classList.toggle('scrolled', window.scrollY > 40); }
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  // Mobile menu
+  function setOpen(open) {
+    menu.classList.toggle('open', open);
+    toggle.setAttribute('aria-expanded', String(open));
+  }
+  toggle.addEventListener('click', function () { setOpen(!menu.classList.contains('open')); });
+  menu.addEventListener('click', function (e) { if (e.target.closest('a')) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+
+  // Highlight the link for the section in view
+  var sections = links.map(function (a) { return document.querySelector(a.getAttribute('href')); });
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) {
+          links.forEach(function (a) {
+            a.classList.toggle('active', a.getAttribute('href') === '#' + en.target.id);
+          });
+        }
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    sections.forEach(function (s) { if (s) io.observe(s); });
+  }
+})();
+</script>
+</body>
+</html>
